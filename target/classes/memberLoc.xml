@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberLocns">	
+	<insert id="insert" parameterType="memberLoc">
+		insert into memberLoc (id, latitude, longitude) values
+		 (#{id}, #{latitude}, #{longitude}) 
+	</insert>
+	
+	<update id="update" parameterType="memberLoc">
+		update memberLoc set latitude = #{latitude}, longitude = #{longitude}  where id = #{id }
+	</update>
+	
+	
+</mapper>

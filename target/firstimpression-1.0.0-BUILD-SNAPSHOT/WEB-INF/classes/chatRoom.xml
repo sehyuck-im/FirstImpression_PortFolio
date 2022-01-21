@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chatRoomns">
+<select id="select" parameterType="chatRoom" resultType="chatRoom">
+select * from chatroom where enterUser1=#{enterUser1} and enterUser2=#{enterUser2} and chatRoomdel='n'
+</select>
+<insert id="insert" parameterType="chatRoom">
+<selectKey keyProperty="chatRoompk" order="BEFORE" resultType="integer">
+			select nvl(max(chatRoompk), 0) + 1 chatRoompk from chatroom
+		</selectKey>
+insert into chatroom values(#{chatRoompk},#{chatRoomNo},#{enterUser1},#{enterUser2},0,'none','n')
+</insert>
+<select id="selectMychatRoom" parameterType="string" resultType="chatRoom">
+select * from chatroom where (enterUser1=#{nick}) and carryOnCheck in (0,1) and chatRoomdel='n'
+</select>
+<select id="selectMychatRoom2" parameterType="string" resultType="chatRoom">
+select * from chatroom where (enterUser1=#{nick}) and carryOnCheck=2 and chatRoomdel='n'
+</select>
+<select id="selectChatcheck" parameterType="chatRoom" resultType="integer">
+select carryOnCheck from chatRoom where enterUser1=#{enterUser1} and chatRoomNo=#{chatRoomNo} and chatRoomdel='n'
+</select>
+<select id="selectTargetUser" parameterType="chatRoom" resultType="string">
+select enterUser2 from chatRoom where enterUser1=#{enterUser1} and chatRoomNo=#{chatRoomNo} and chatRoomdel='n'
+</select>
+<select id="selectChatbyChatRoom" parameterType="chatRoom" resultType="chatRoom">
+select * from chatRoom where enterUser1=#{enterUser1} and chatRoomNo=#{chatRoomNo} and chatRoomdel='n'
+</select>
+<update id="updateCarryOnCheck" parameterType="chatRoom">
+update chatRoom set carryOnCheck=#{carryOnCheck},carryOnNick=#{carryOnNick} where enterUser1=#{enterUser1} and chatRoomNo=#{chatRoomNo} and chatRoomdel='n'
+</update>
+<update id="deleteChatingRoom" parameterType="chatRoom">
+update chatRoom set chatRoomdel='y' where enterUser1=#{enterUser1} and chatRoomNo=#{chatRoomNo}
+</update>
+<select id="selectMychatRoom3" parameterType="string" resultType="chatRoom">
+select * from chatroom where (enterUser1=#{nick}) and chatRoomdel='n'
+</select>
+<select id="selectmydelChat" parameterType="string" resultType="chatRoom">
+select * from chatroom where (enterUser1=#{nick}) and chatRoomdel='y'
+</select>
+<select id="chklikenick"  parameterType="chatRoom" resultType="chatRoom">
+select * from chatRoom where chatRoomNo=#{chatRoomNo} and enterUser1=#{enterUser1}
+</select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="hashTagns">	
+	<insert id="insertHash" parameterType="hashTag">
+		<selectKey keyProperty="htNum" order="BEFORE"
+			resultType="integer">
+			select nvl(max(htNum), 0) + 1 htNum from hashTag
+		</selectKey>
+		insert into hashTag values
+		 (#{htNum} , #{anNum}, #{tag })
+	</insert>
+	<select id="selectHashTag" resultType="hashTag" parameterType="string">
+		select * from hashTag where tag=#{tag} order by anNum desc
+	</select>
+	<select id="selecttagbynum" resultType="hashTag" parameterType="integer">
+		select * from hashTag where anNum=#{anNum} order by htNum
+	</select>
+	<delete id="deleteHashTag" parameterType="integer">
+		delete from hashTag where anNum = #{anNum} 
+	</delete>
+</mapper>

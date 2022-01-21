@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="anoFeedns">	
+	<select id="selectMpList" resultType="MasterAnBoard" parameterType="string">
+		select m.id, m.name, a.anNum, a.nick, a.anTitle, a.likeCount, a.anCheck, a.anDel from member m, anoFeed a where m.nick=a.nick
+	</select>
+	<insert id="insertFeed" parameterType="anoFeed">
+		<selectKey keyProperty="anNum" order="BEFORE"
+			resultType="integer">
+			select nvl(max(anNum), 0) + 1 anNum from anoFeed
+		</selectKey>
+		<if test="photo != null">
+		insert into anoFeed values
+		 (#{anNum} , #{anTitle}, #{anContent }, #{nick }, #{photo }, sysdate, 'n', #{anCheck}, 0, 0)
+		 </if>
+		 <if test="photo == null">
+		insert into anoFeed(anNum, anTitle, anContent, nick, anDate, anDel, anCheck, likeCount, replyCount)
+		 values
+		 (#{anNum} , #{anTitle}, #{anContent }, #{nick }, sysdate, 'n', #{anCheck}, 0, 0)
+		 </if>
+	</insert>
+	<select id="selectFeed" resultType="anoFeed" parameterType="anoFeed">
+		select * from anoFeed where nick = #{nick } and anDate = (select max(anDate) from anoFeed where nick=#{nick})
+	</select>
+	<select id="selectanobyNick" resultType="anoFeed">
+		select * from anoFeed where nick in ${nick} order by anNum desc
+	</select>
+	<select id="selectAllano" resultType="anoFeed">
+	select * from anoFeed order by anNum desc 
+	</select>
+	<select id="selectanobynum" resultType="anoFeed" parameterType="integer">
+	select * from anoFeed where anNum=#{anNum}
+	</select>
+	<select id="selectanobyAll" resultType="anoFeed">
+	select * from anoFeed where anNum in (select anNum from hashTag where tag=#{tag} ) and nick in ${nick} order by anNum desc
+	</select>	
+	<update id="deleteanobynum" parameterType="integer">
+		update anoFeed set anDel='y' where anNum=#{anNum}
+	</update>
+	<update id="restoreanobynum" parameterType="integer">
+		update anoFeed set anDel='n' where anNum=#{anNum}
+	</update>
+		<select id="selectMyAno" resultType="anoFeed" parameterType="string">
+	select * from anoFeed where nick=#{nick} order by anNum desc
+	</select>
+	<update id="updateLikeUp" parameterType="likeFeed">
+		update anoFeed set likeCount = likeCount + 1 where anNum = #{anNum }
+	</update>
+	<update id="updateLikeDown" parameterType="likeFeed">
+		update anoFeed set likeCount = likeCount - 1 where anNum = #{anNum }
+	</update>
+	<select id="selectLikeCount" parameterType="integer" resultType="integer">
+		select likeCount from anoFeed where anNum = #{anNum }
+	</select>
+	<update id="updateReplyCountUp" parameterType="reply">
+		update anoFeed set replyCount = replyCount + 1 where anNum = #{anNum }
+	</update>
+	<select id="selectReplyCount" parameterType="integer" resultType="integer">
+		select replyCount from anoFeed where anNum = #{anNum} 
+	</select>
+	<update id="updateReplyCountDown" parameterType="reply">
+		update anoFeed set replyCount = replyCount - 1 where anNum = #{anNum }
+	</update>
+	<delete id="deleteAllAno" parameterType="string">
+		delete from anofeed where nick = #{nick }
+	</delete>
+	<select id="selectanobyNickTwo" parameterType="string" resultType="Object">
+		select * from anoFeed where nick = #{nick }
+	</select>
+	<update id="updateFeed" parameterType="anoFeed">
+		update anoFeed set anTitle = #{anTitle}, anContent = #{anContent}, photo = #{photo }, anCheck = #{anCheck } where anNum = #{anNum }
+	</update>
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberns">
+	<select id="selectId" resultType="member" parameterType="string">
+		select * from member where id = #{id }
+	</select>
+	<select id="selectNick" resultType="member" parameterType="string">
+		select * from member where nick = #{nick }
+	</select>
+	<insert id="insert" parameterType="member">
+		insert into member (id, password, name, nick, phone, email, birth, address, regDate) values
+		 (#{id}, #{password}, #{name}, #{nick}, #{phone}, #{email}, #{birth}, #{address}, sysdate) 
+	</insert>
+	
+	<insert id="insertNaver" parameterType="member">
+		insert into member (id, password, name, nick, phone, email, birth, address, regDate, state) values
+		 (#{id}, #{password}, #{name}, #{nick}, #{phone}, #{email}, #{birth}, #{address}, sysdate, 'y') 
+	</insert>
+	<insert id="insertProfile" parameterType="profile">
+		insert into profile (nick, id, age, gender) values (#{nick}, #{id}, #{age}, 'none')
+	</insert>
+	<insert id="insertProfileNaver" parameterType="profile">
+		insert into profile (nick, id, age, state) values (#{nick}, #{id}, #{age}, 'y')
+	</insert>
+	<select id="selectProfileById" parameterType="string" resultType="profile">
+		select * from profile where id = #{id }
+	</select>
+	<select id="selectProfileByNick" parameterType="string" resultType="profile">
+		select * from profile where nick = #{nick }
+	</select>
+	<select id="getAge" parameterType="string" resultType="integer">
+		select ((sysdate - birth)/365)+1 from member where id = #{id}
+	</select>
+	<insert id="insertPreference" parameterType="myPreference">
+		insert into myPreference (nick) values (#{nick})
+	</insert>
+	<delete id="deleteProfile" parameterType="string">
+		delete from profile where nick = #{nick}
+	</delete>
+	<delete id="deletePreference" parameterType="string">
+		delete from myPreference where nick = #{nick}
+	</delete>	
+	<select id="selectMasterMemberInfo" parameterType="string" resultType="masterMemberInfo">
+	select m.id, m.name, m.nick, m.email, m.regDate, p.age, p.gender, m.del from member m, profile p where m.id=p.id order by id
+	</select>	
+	<update id="deleteMemberbyid" parameterType="string">
+		update member set del='y' where id=#{id}
+	</update>
+	<update id="restoreMemberbyid" parameterType="string">
+		update member set del='n' where id=#{id}
+	</update>
+	<update id="updateMember" parameterType="member">
+		update member set name = #{name}, phone = #{phone } 
+		<if test="email != null">
+			, email = #{email }
+		</if>
+		<if test="address != null">
+			, address = #{address }
+		</if>
+		<if test="password != null">
+			, password = #{password }
+		</if>
+		where id = #{id }
+	</update>
+	<select id="checkEmail" parameterType="string" resultType="integer">
+		select count(*) from member where email = #{email }
+	</select>
+	<select id="findID" parameterType="member" resultType="string">
+		select id from member where name = #{name } and email = #{email }
+	</select>
+	<select id="checkPass" parameterType="member" resultType="integer">
+		select count(*) from member where email = #{email } and id = #{id }
+	</select>
+	<update id="setNewPass" parameterType="member">
+		update member set password = #{password } where id = #{id } and email = #{email }
+	</update>
+	<delete id="deleteMember" parameterType="string">
+		delete from member where id = #{id }
+	</delete>
+	<select id="countId" parameterType="member" resultType="integer">
+		select count(*) from member where name = #{name } and email = #{email }
+	</select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="chatHistoryns">
+<insert id="insertMessage" parameterType="chatHistory">
+<selectKey keyProperty="sendOrder" order="BEFORE" resultType="integer">
+			select nvl(max(sendOrder), 0) + 1 sendOrder from chatHistory
+		</selectKey>
+insert into chatHistory values(#{sendOrder},#{chatRoomNo},#{sendUser},#{message},#{readCount})
+</insert>
+<select id="selectchatHistory" resultType="chatHistory" parameterType="chatHistory">
+select * from chatHistory where chatRoomNo=#{chatRoomNo} and (readCount = 2 or (sendUser like '%' ||  #{sendUser} || '%')) order by sendOrder
+</select>
+<select id="selectnewchatHistory" resultType="chatHistory" parameterType="chatHistory">
+select * from chatHistory where chatRoomNo=#{chatRoomNo} and readCount = 1 and (sendUser not like '%' ||  #{sendUser} || '%') order by sendOrder
+</select>
+<select id="chatcount" resultType="_integer" parameterType="chatHistory">
+select count(*) from chatHistory where chatRoomNo=#{chatRoomNo} and sendUser like '%' ||  #{sendUser} || '%'
+</select>
+<update id="updateReadCount" parameterType="chatHistory">
+update chatHistory set readCount=2 where sendOrder=#{sendOrder}
+</update>
+<select id="unReadMessage" resultType="integer" parameterType="chatHistory">
+select count(*) from chatHistory where chatRoomNo=#{chatRoomNo} and readCount = 1 and sendUser not like '%' ||  #{sendUser} || '%' order by sendOrder
+</select>
+<select id="lastMessage" resultType="string" parameterType="chatHistory">
+select message from chatHistory where chatRoomNo=#{chatRoomNo} and sendOrder=(select max(sendOrder) from chatHistory where chatRoomNo=#{chatRoomNo})
+</select>
+<select id="myUnreadMessageCount" resultType="integer" parameterType="chatHistory">
+select count(*) from chatHistory where readCount = 1 and sendUser != #{sendUser} order by sendOrder
+</select>
+</mapper>

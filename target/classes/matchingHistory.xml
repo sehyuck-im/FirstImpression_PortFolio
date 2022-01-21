@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="matchingHistoryns">
+<insert id="insert" parameterType="matchingHistory">
+<selectKey keyProperty="mchNum" order="BEFORE" resultType="integer">
+			select nvl(max(mchNum), 0) + 1 mchNum from matchingHistory
+		</selectKey>
+insert into matchingHistory values(#{mchNum},#{nickWhoLiked},#{targetNick},1,0,0,sysdate)
+</insert>
+<update id="updateFirstLike" parameterType="matchingHistory">
+update matchingHistory set firstLike=2 where nickWhoLiked=#{nickWhoLiked} and targetNick=#{targetNick}
+</update>
+<select id="selectMatchingHistory" parameterType="matchingHistory" resultType="matchingHistory">
+select * from matchingHistory where nickWhoLiked=#{nickWhoLiked} and targetNick=#{targetNick}
+</select>
+<update id="updateSecondLike" parameterType="matchingHistory">
+update matchingHistory set secondLike=#{secondLike} where nickWhoLiked=#{nickWhoLiked} and targetNick=#{targetNick}
+</update>
+<update id="updateMeetMade" parameterType="matchingHistory">
+update matchingHistory set meetMade=#{meetMade} where nickWhoLiked=#{nickWhoLiked} and targetNick=#{targetNick}
+</update>
+
+<select id="getTotal" parameterType="string" resultType="_int">
+	select count(*) from MatchingHistory
+</select>
+<select id="getTotalSl" parameterType="string" resultType="_int">
+	select count(*) from MatchingHistory where secondlike !=0
+</select>
+<select id="getTotalMm" parameterType="string" resultType="_int">
+	select count(*) from MatchingHistory where meetmade = 2
+</select>
+<select id="firstMatchingCount" resultType="_int">
+select count(*) from MatchingHistory where firstLike=2
+</select>
+<select id="secondMatchingCount" resultType="_int">
+select count(*) from MatchingHistory where secondLike=2
+</select>
+<select id="matchmadeCount" resultType="_int">
+select count(*) from MatchingHistory where meetMade=2
+</select>
+<select id="selctList" resultType="matchingHistory">
+select * from matchingHistory order by mchNum
+</select>
+
+<select id="selmaxdow" resultType="string">
+select DOW from (SELECT TO_CHAR(matchingdate, 'DAY') as DOW, COUNT(*) as cnt FROM MatchingHistory GROUP BY TO_CHAR(matchingdate, 'DAY')) where cnt=(select max(cnt) from (SELECT TO_CHAR(matchingdate, 'DAY') as DOW, COUNT(*) as cnt FROM MatchingHistory GROUP BY TO_CHAR(matchingdate, 'DAY')))
+</select>
+<select id="selavgdow" resultType="integer">
+select ROUND(AVG(cnt),0) from (SELECT TO_CHAR(matchingdate, 'DAY') as DOW, COUNT(*) as cnt FROM MatchingHistory GROUP BY TO_CHAR(matchingdate, 'DAY'))
+</select>
+<select id="seltodayCnt" resultType="integer">
+SELECT COUNT(*) FROM MatchingHistory where TO_CHAR(matchingdate, 'YYYY-MM-DD') = TO_CHAR(SYSDATE, 'YYYY-MM-DD') GROUP BY TO_CHAR(matchingdate, 'YYYY-MM-DD')
+</select>
+<select id="myHistory" parameterType="string" resultType="matchingHistory">
+selecr * from MatchingHistory where (nickWhoLiked=#{nick} or targetNick=#{nick}) and meetMade=2
+</select>
+
+</mapper>

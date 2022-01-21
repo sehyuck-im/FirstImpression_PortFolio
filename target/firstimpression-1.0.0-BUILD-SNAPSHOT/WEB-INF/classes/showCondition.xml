@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="showConditionns">	
+	<select id="selectselconbyNic" resultType="showCondition" parameterType="string">
+		select * from showCondition where nick=#{nick}
+	</select>
+	<select id="selectShowCondition" resultType="_int" parameterType="string">
+		select count(*) from showCondition where nick=#{nick}
+	</select>
+	<insert id="insertShowCondition" parameterType="showCondition">
+		insert into showCondition values(#{nick}, #{anHash}, #{distCheck} )		
+	</insert>
+	<update id="updateShowCondition" parameterType="showCondition">
+		update showCondition set anHash = #{anHash }, distCheck = #{distCheck } where nick = #{nick}
+	</update>
+	<delete id="deleteShowCondition" parameterType="string">
+		delete from showCondition where nick = #{nick }
+	</delete>
+</mapper>

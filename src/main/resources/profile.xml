@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="profilens">
+	<select id="selectProfileById" parameterType="string"
+		resultType="profile">
+		select * from profile where id = #{id }
+	</select>
+	<select id="selectProfileByNick" parameterType="string"
+		resultType="profile">
+		select * from profile where nick = #{nick }
+	</select>
+	<!-- tag 작업 -->
+	<select id="getTagCnt" resultType="integer">
+		select count(*) from tagList
+	</select>
+	<select id="selectTag" resultType="string"
+		parameterType="integer">
+		select tag from tagList where tlnum = #{i }
+	</select>
+	<select id="selectTagCnt" resultType="integer"
+		parameterType="string">
+		select count(*) from interest where nick = #{nick }
+	</select>
+	<select id="selectTempList" resultType="interest"
+		parameterType="interest">
+		select * from interest where nick = #{nick } order by itNum
+	</select>
+	<select id="selectTagList" resultType="string" parameterType="string">
+		select tag from interest where nick = #{nick }
+	</select>
+	<insert id="saveTempList" parameterType="java.util.List">
+		insert all
+		<foreach collection="list" item="item">
+			into TempInterest values(#{item.itNum}, #{item.nick}, #{item.tag})
+		</foreach>
+		select * from dual
+	</insert>
+	<insert id="insertInterest" parameterType="interest">
+		<selectKey keyProperty="itNum" order="BEFORE"
+			resultType="integer">
+			select nvl(max(itNum), 0) + 1 itNum from interest
+		</selectKey>
+		insert into interest values (#{itNum} , #{nick }, #{tag } )
+	</insert>
+	<insert id="insertPhotos" parameterType="java.util.List">
+		insert all
+		<!-- list에서 memberphoto 하나씩 뽑아서 item에 넣고 입력처리 반복 데이터 없을 때까지 -->
+		<foreach collection="list" item="item">
+			into memberphoto values
+			(get_seq, #{item.id }, #{item.photo })
+		</foreach>
+		select * from dual
+	</insert>
+	<select id="getAge" parameterType="string" resultType="integer">
+		select
+		((sysdate - birth)/365)+1 from member where id = #{id}
+	</select>
+	<update id="updateProfile" parameterType="profile">
+		update profile set gender = #{gender }, photo1 = #{photo1 }, photo2 = #{photo2 }, photo3 = #{photo3 }
+		<if test="intro != null">
+			, intro = #{intro }
+		</if>
+		where nick = #{nick }
+	</update>
+	<select id="rollbackInterest" resultType="interest"
+		parameterType="interest">
+		select * from tempInterest where nick = #{nick } order by itNum
+	</select>
+	<insert id="insertBackUp" parameterType="java.util.List">
+		insert all
+		<foreach collection="list" item="item">
+			into Interest values(#{item.itNum}, #{item.nick}, #{item.tag})
+		</foreach>
+		select * from dual
+	</insert>
+	<delete id="deleteInterest" parameterType="string">
+		delete from interest where nick = #{nick }
+	</delete>
+	<delete id="deleteTemp" parameterType="string">
+		delete from tempInterest where nick = #{nick }
+	</delete>
+	<!-- 태그 작업 -->
+	<select id="selectPreference" parameterType="string" resultType="myPreference">
+		select * from myPreference where nick = #{nick}
+	</select>
+	<update id="updatePreference" parameterType="myPreference">
+		update myPreference set gender = #{gender }, minAge = #{minAge}, maxAge = #{maxAge}, 
+			tag = #{tag } where nick = #{nick }
+	</update>
+	<select id="selectTags" resultType="TagList">
+		select * from tagList order by tlnum
+	</select>
+
+	<select id="selectInterest" parameterType="interest" resultType="interest">
+		select * from Interest where nick = #{nick } and tag=#{tag}
+	</select>
+	
+	<!-- 마스터 페이지 -->
+	<select id="getMale" parameterType="string" resultType="_int">
+	select count(*) from profile where gender = 'male'
+	</select>
+	<select id="getFemale" parameterType="string" resultType="_int">
+	select count(*) from profile where gender = 'female'
+	</select>
+	<select id="getBoth" parameterType="string" resultType="_int">
+	select count(*) from profile where gender = 'none'
+	</select>
+	<select id="selectPhoto" parameterType="string" resultType="string">
+		select photo1 from profile where nick = #{nick }
+	</select>
+
+</mapper>

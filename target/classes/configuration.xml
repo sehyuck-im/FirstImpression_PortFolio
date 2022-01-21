@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<typeAliases>
+		<typeAlias alias="member" type="com.finalproject.firstimpression.model.Member"/>
+		<typeAlias alias="memberLoc" type="com.finalproject.firstimpression.model.MemberLoc"/>
+		<typeAlias alias="selLoc" type="com.finalproject.firstimpression.model.SelLoc"/>
+		<typeAlias alias="profile" type="com.finalproject.firstimpression.model.Profile"/>
+		<typeAlias alias="TagList" type="com.finalproject.firstimpression.model.TagList"/>
+		<typeAlias alias="interest" type="com.finalproject.firstimpression.model.Interest"/>
+		<typeAlias alias="matching" type="com.finalproject.firstimpression.model.Matching"/>
+		<typeAlias alias="location" type="com.finalproject.firstimpression.model.Location"/>
+		<typeAlias alias="chatRoom" type="com.finalproject.firstimpression.model.ChatRoom"/>
+		<typeAlias alias="chatHistory" type="com.finalproject.firstimpression.model.ChatHistory"/>
+		<typeAlias alias="myPreference" type="com.finalproject.firstimpression.model.MyPreference"/>
+		<typeAlias alias="matchingHistory" type="com.finalproject.firstimpression.model.MatchingHistory"/>
+		<typeAlias alias="masterMemberInfo" type="com.finalproject.firstimpression.model.MasterMemberInfo"/>
+		<typeAlias alias="appointment" type="com.finalproject.firstimpression.model.Appointment"/>
+		<typeAlias alias="anoFeed" type="com.finalproject.firstimpression.model.AnoFeed"/>
+		<typeAlias alias="reply" type="com.finalproject.firstimpression.model.Reply"/>
+		<typeAlias alias="hashTag" type="com.finalproject.firstimpression.model.HashTag"/>
+		<typeAlias alias="showCondition" type="com.finalproject.firstimpression.model.ShowCondition"/>
+		<typeAlias alias="likeFeed" type="com.finalproject.firstimpression.model.LikeFeed"/>
+		<typeAlias alias="masterAnBoard" type="com.finalproject.firstimpression.model.MasterAnBoard"/>
+		<typeAlias alias="report" type="com.finalproject.firstimpression.model.Report"/>
+
+</typeAliases>
+<mappers>
+		<mapper resource="member.xml"/>
+		<mapper resource="memberLoc.xml"/>
+		<mapper resource="selLoc.xml"/>
+		<mapper resource="profile.xml"/>
+		<mapper resource="matching.xml"/>
+		<mapper resource="location.xml"/>
+		<mapper resource="chatRoom.xml"/>
+		<mapper resource="chatHistory.xml"/>
+		<mapper resource="matchingHistory.xml"/>
+		<mapper resource="appointment.xml"/>
+		<mapper resource="anoFeed.xml"/>
+		<mapper resource="hashTag.xml"/>
+		<mapper resource="reply.xml"/>
+		<mapper resource="showCondition.xml"/>
+		<mapper resource="likeFeed.xml"/>
+		<mapper resource="report.xml"/>
+</mappers>
+</configuration>
+
+
+
